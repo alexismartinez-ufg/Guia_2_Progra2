@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace Ejemplo_2
@@ -28,6 +27,13 @@ namespace Ejemplo_2
                 //digo que verifico a txtapellido y si no cumple mando ese mensaje
                 errorProvider1.SetError(txbApellido, "Ingrese apellido");
             }
+
+            if(txbFecha.Value > DateTime.Now)
+            {
+                validado = false;
+                //digo que verifico a txtapellido y si no cumple mando ese mensaje
+                errorProvider1.SetError(txbFecha, "Fecha invalida");
+            }
             return validado;
         }
 
@@ -38,7 +44,7 @@ namespace Ejemplo_2
             errorProvider1.SetError(txbApellido, "");
         }
 
-        private void btnGuardar_Click(object sender, System.EventArgs e)
+        private void btnGuardar_Click(object sender, EventArgs e)
         {
             //limpia cualquier mensaje de error de alguna corrida previa
             BorrarMesaje();
@@ -47,14 +53,20 @@ namespace Ejemplo_2
             {
                 MessageBox.Show("Los datos se ingresaron correctamente");
             }
+            else
+            {
+                MessageBox.Show("Los datos no se ingresaron correctamente");
+                return;
+            }
+
             //verificamos la fecha de nacimiento que nos den
             //DateTimePicker se llama dtpFechaNacimiento
             DateTime fechaNacimiento = txbFecha.Value;
             //verificamos la fecha del sistema (solo calculamos con los años
-            int anios = System.DateTime.Now.Year - fechaNacimiento.Year;
+            int anios = DateTime.Now.Year - fechaNacimiento.Year;
             /*verificamos aparte del año si ya pasamos la fecha de nacimiento de este año o nos
            faltan días*/
-            if (System.DateTime.Now.Subtract(fechaNacimiento.AddYears(anios)).TotalDays < 0)
+            if (DateTime.Now.Subtract(fechaNacimiento.AddYears(anios)).TotalDays < 0)
                 //si nos faltan días para cumplir años al cálculo le resta uno
                 txbEdad.Text = Convert.ToString(anios - 1);
             else
